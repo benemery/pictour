@@ -5,6 +5,9 @@ class Tour(models.Model):
     name = models.CharField(max_length=256)
     created = models.DateTimeField(auto_now_add=True)
 
+    def __unicode__(self):
+        return self.name
+
     @property
     def first_step(self):
         return self.steps.get(step_number=1)
@@ -21,6 +24,9 @@ class Step(models.Model):
     tour = models.ForeignKey(to='photo_geoip.Tour', related_name='steps')
     step_number = models.IntegerField()
 
+    def __unicode__(self):
+        return self.name
+
     def next(self):
         """Get the next step, return -1 if no more"""
         base_qs = self.tour.steps.filter(step_number__gt=self.step_number)
@@ -32,3 +38,5 @@ class UserAuthTokens(models.Model):
     """Keep track of oauth tokens here"""
     user = models.ForeignKey('auth.User')
     token = models.CharField(max_length=1024)
+    dropbox_uid = models.IntegerField()
+    cursor = models.CharField(max_length=2048, blank=True, default='')

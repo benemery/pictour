@@ -1,10 +1,13 @@
 import os
 
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from django_any import any_model
 from photo_geoip.models import Tour, Step
 from photo_geoip.helpers import extract_data, haversine, image_within_limit
+
+
 
 
 CURRENT_DIR = os.path.dirname(__file__)
@@ -47,3 +50,19 @@ class TestModelSteps(TestCase):
 
         fourth = third.next()
         self.assertEqual(fourth, -1)
+
+
+class TestViewWebhook(TestCase):
+    def test_get(self):
+        """Do we respond to a challenge correctly?"""
+        challenge = "this-is-a-challenge"
+        response = self.client.get(reverse('webhook'), {'challenge': challenge})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, challenge)
+
+    def test_post_invalid_sig(self):
+        """What happens if we supply an incorrect sig?"""
+        response = self.client.post(reverse('webhook'), X_Dropbox_Signature="FOOBAR")
+        self.assertEqual(response.status_code, 403)
+        
