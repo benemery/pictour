@@ -84,5 +84,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-DROPBOX_APP_KEY = 'whnxq4cwupvhgv2'
-DROPBOX_APP_SECRET = 'v3lynmyy1ubq7e5'
+from settings_local import *
+
+# Set the following in a `settings_local.py` file.
+
+DROPBOX_APP_KEY = 'your-dropbox-app-key'
+DROPBOX_APP_SECRET = 'your-dropbox-app-secret'

@@ -16,7 +16,7 @@ Run tests
 
     ./manage.py test photo_geoip
 
-Configure Dropbox vars `DROPBOX_APP_KEY` and `DROPBOX_APP_SECRET` in `settings.py`.
+Configure secret vars in a `droptoup/settings_local.py` file, as documented in `settings.py`.
 
 Create database (follow prompts to create a superuser)
 
