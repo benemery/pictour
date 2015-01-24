@@ -190,6 +190,8 @@
   {% endfor %}
 
   <script type="text/javascript">
+  FAKE_IT_TIL_YOU_MAKE_IT = true;
+  
       function getLocation() {
          if (navigator.geolocation) {
              navigator.geolocation.watchPosition(showPosition);
@@ -206,11 +208,26 @@
        } 
        /*zoomTo(3);*/
        targetLat = 51.5033;
-       targetLon = 0.1197; 
+       targetLon = 0.1197;
+       
+       if (FAKE_IT_TIL_YOU_MAKE_IT)
+       {
+           zoomLevel = 13;
+           setInterval(function()
+           { 
+               if (zoomLevel > 1)
+                   zoomLevel -= 0.02;
+               zoomTo(zoomLevel);
+           }, 100);
+       }
      
-       function gotLocation(lat, lon){
-         distance = calculateDistance(lat, lon, targetLat, targetLon);
-         zoomTo(distance);
+       function gotLocation(lat, lon)
+       {
+           if (!FAKE_IT_TIL_YOU_MAKE_IT)
+           {
+               distance = calculateDistance(lat, lon, targetLat, targetLon);
+               zoomTo(distance);
+           }
        }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {   
