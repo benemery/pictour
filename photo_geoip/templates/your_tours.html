@@ -22,6 +22,9 @@
               <li>
                 <a href="#contact" class="gn-icon gn-icon-archive">Contact</a>
               </li>
+              <li>
+                <a href="/admin" class="gn-icon gn-icon-cog">[ Admin ]</a>
+              </li>
             </ul>
           </div><!-- /gn-scroller -->
         </nav>
@@ -73,16 +76,14 @@
             </ul>
         <ul> -->
 
-
-
         {% for user_tour in tours %}
         <div class="col-xs-6 col-sm-3 col-md-3">
           <div class="team boxed-grey">
             <div class="inner">
               <h5>{{ user_tour.tour.name }}</h5>
-              <p class="subtitle">You said you wanted kittens!</p>
+              <p class="subtitle">{{ user_tour.tour.punchline }}</p>
               <a class="avatar" href="#tour-{{ user_tour.tour.slug }}">
-                <img src="/static/img/kitten.jpg" width="300" height="300" alt="" class="img-responsive" />
+                <img src="{{ user_tour.tour.image.url }}" width="300" height="300" alt="" class="img-responsive" />
               </a>
               <p>
                 {{ user_tour.percentage_completion }}% complete!
