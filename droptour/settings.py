@@ -87,9 +87,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-from settings_local import *
-
-# Set the following in a `settings_local.py` file.
-
 DROPBOX_APP_KEY = 'your-dropbox-app-key'
 DROPBOX_APP_SECRET = 'your-dropbox-app-secret'
+
+try:
+    from settings_local import *
+except:
+    pass
