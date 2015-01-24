@@ -460,14 +460,14 @@ input.gn-search:focus {
 }
 
 .intro .slogan {
-	padding:250px 0 60px;
+	padding-top: 120px;
 	text-align: center;
 	
 }
 .intro .slogan h1 {
 	color: #0d49b8;
 	line-height: 1.1em;
-	margin-bottom: 20px;
+	margin-bottom: 280px;
 	 font-size: 40px;
 }
 .intro .slogan p {
@@ -829,6 +829,16 @@ footer a:hover {
   color: #fff;
   background-color: #666;
   border-color: #666;
+}
+
+.btn-dropbox,
+.btn-dropbox:hover,
+.btn-dropbox:focus,
+.btn-dropbox:active,
+.btn-dropbox.active {
+  color: #fff;
+  background-color: #007ee5;
+  border-color: #007ee5;
 }
 
 
