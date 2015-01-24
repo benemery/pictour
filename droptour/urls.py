@@ -44,9 +44,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^dbresponse', DBResponseView.as_view(), name='dbresponse'),
-
-    url(r'^', IndexView.as_view()),
+    url(r'^$', IndexView.as_view()),
 )
 
 if settings.DEBUG:

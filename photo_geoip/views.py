@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files import File
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.views.generic import View
 
 from dropbox.client import DropboxClient
@@ -89,7 +90,8 @@ def process_user(uid):
 
                         # Now save the image
                         s.seek(0)
-                        us.image.save('%s.jpg' % us.id, File(s))
+                        filename = 'step_%s.jpg' % us.id
+                        us.image.save(filename, File(s))
             except Exception, e:
                 print e
 
@@ -102,18 +104,13 @@ def process_user(uid):
         # Repeat only if there's more to do
         has_more = result['has_more']
 
-
-from django.shortcuts import render
-
 class YourTours(View):
     @classmethod
     def as_view(cls, **initkwargs):
         view = super(YourTours, cls).as_view(**initkwargs)
-        return (view)
+        return login_required(view, login_url='/#about')
 
     def get(self, request):
         user = request.user
-
         tours = user.tours.all().select_related('completed_steps')
-
         return render(request, 'your_tours.html', {'tours': tours})

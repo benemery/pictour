@@ -1,8 +1,14 @@
+from math import floor
+
 from django.db import models
 
 class Tour(models.Model):
     """Parent model for grouping a tour."""
     name = models.CharField(max_length=256)
+    punchline = models.TextField(blank=True, default='')
+    slug = models.SlugField()
+    image = models.ImageField(blank=True, default='')
+
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -47,7 +53,7 @@ class UserTour(models.Model):
         if not self.completed_steps.exists():
             return self.tour.first_step
         last_step = self.completed_steps.all().order_by('-step__step_number')[0]
-        return last_step.next()
+        return last_step.step.next()
 
     @staticmethod
     def get_user_tour(user):
@@ -66,6 +72,13 @@ class UserTour(models.Model):
             user_tour = user_tour_qs[0]
 
         return user_tour
+
+    @property
+    def percentage_completion(self):
+        """How far through the tour is this user?"""
+        all_steps = self.tour.steps.count()
+        completed_steps = self.completed_steps.count()
+        return int(floor(float(completed_steps) / all_steps * 100))
 
     def mark_completed(self):
         self.active = False
