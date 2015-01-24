@@ -54,3 +54,6 @@ docs/_build/
 target/
 db.sqlite3
 droptour/settings_local.py
+
+static_collected/
+media/
