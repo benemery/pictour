@@ -89,7 +89,8 @@ def process_user(uid):
 
                         # Now save the image
                         s.seek(0)
-                        us.image.save('%s.jpg' % us.id, File(s))
+                        filename = 'step_%s.jpg' % us.id
+                        us.image.save(filename, File(s))
             except Exception, e:
                 print e
 

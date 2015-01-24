@@ -5,6 +5,7 @@ from django.db import models
 class Tour(models.Model):
     """Parent model for grouping a tour."""
     name = models.CharField(max_length=256)
+    image = models.ImageField()
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
