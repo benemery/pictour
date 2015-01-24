@@ -1,3 +1,5 @@
+from math import floor
+
 from django.db import models
 
 class Tour(models.Model):
@@ -66,6 +68,13 @@ class UserTour(models.Model):
             user_tour = user_tour_qs[0]
 
         return user_tour
+
+    @property
+    def percentage_completion(self):
+        """How far through the tour is this user?"""
+        all_steps = self.tour.steps.count()
+        completed_steps = self.completed_steps.count()
+        return int(floor(float(completed_steps) / all_steps * 100))
 
     def mark_completed(self):
         self.active = False
