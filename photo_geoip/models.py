@@ -34,10 +34,10 @@ class Step(models.Model):
         return self.name
 
     def next(self):
-        """Get the next step, return -1 if no more"""
+        """Get the next step, return None if no more"""
         base_qs = self.tour.steps.filter(step_number__gt=self.step_number)
         if not base_qs.exists():
-            return -1
+            return
         return base_qs[:1][0]
 
 class UserTour(models.Model):
@@ -46,6 +46,9 @@ class UserTour(models.Model):
     tour = models.ForeignKey(to='photo_geoip.Tour')
     active = models.BooleanField(default=True)
     completed = models.BooleanField(default=False)
+
+    def get_completed_steps(self):
+        return self.completed_steps.all().order_by('id')
 
     @property
     def current_step(self):
@@ -76,13 +79,13 @@ class UserTour(models.Model):
     @property
     def percentage_completion(self):
         """How far through the tour is this user?"""
-        all_steps = self.tour.steps.count()
+        all_steps = self.tour.steps.count() or 1
         completed_steps = self.completed_steps.count()
         return int(floor(float(completed_steps) / all_steps * 100))
 
     def mark_completed(self):
         self.active = False
-        self.complete = True
+        self.completed = True
         self.save()
 
 class UserStep(models.Model):

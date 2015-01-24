@@ -147,9 +147,9 @@
 
       <div class="row">
 
-        {% for user_step in user_tour.completed_steps.all %}
+        {% for user_step in user_tour.get_completed_steps %}
         <div class="col-xs-6 col-sm-3 col-md-3">
-          <div class="team boxed-grey">
+          <div class="team boxed-grey complete">
             <div class="inner">
               <h5>{{ user_step.step.name }}</h5>
               <p class="subtitle">{{ user_step.step.clue }}</p>
