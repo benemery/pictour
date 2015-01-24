@@ -47,7 +47,7 @@ class TestModelSteps(TestCase):
         self.assertEqual(third.step_number, 3)
 
         fourth = third.next()
-        self.assertEqual(fourth, -1)
+        self.assertEqual(fourth, None)
 
 from django.core.files import File
 
@@ -65,6 +65,18 @@ class TestModelUserStep(TestCase):
             us = UserStep(user_tour=ut, step=step, image='')
             us.image.save('1.jpg', f)
             print us.image
+
+class TestModelUserTour(TestCase):
+    def test_percentage_completion(self):
+        tour = any_model(Tour, name='My Test Tour')
+        step1 = any_model(Step, tour=tour, step_number=1)
+        step2 = any_model(Step, tour=tour, step_number=2)
+        step3 = any_model(Step, tour=tour, step_number=3)
+
+        user_tour = any_model(UserTour, tour=tour)
+        any_model(UserStep, user_tour=user_tour, step=step1, image='')
+
+        self.assertEqual(user_tour.percentage_completion, 33)
 
 class TestViewWebhook(TestCase):
     def test_get(self):

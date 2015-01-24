@@ -3,6 +3,7 @@ ExifRead==2.0.0
 dropbox==2.2.0
 pillow
 python-social-auth
+MySQL-python
 
 # For tests
 django_any

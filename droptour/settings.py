@@ -50,6 +50,17 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.request",
+)
+
 ROOT_URLCONF = 'droptour.urls'
 
 WSGI_APPLICATION = 'droptour.wsgi.application'
@@ -83,12 +94,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
-from settings_local import *
-
-# Set the following in a `settings_local.py` file.
 
 DROPBOX_APP_KEY = 'your-dropbox-app-key'
 DROPBOX_APP_SECRET = 'your-dropbox-app-secret'
+
+try:
+    from settings_local import *
+except:
+    pass

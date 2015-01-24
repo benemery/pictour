@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <div class="container">
+    <ul id="gn-menu" class="gn-menu-main">
+      <li class="gn-trigger">
+        <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+        <nav class="gn-menu-wrapper">
+          <div class="gn-scroller">
+            <ul class="gn-menu">
+              <li class="gn-search-item">
+                <input placeholder="Search" type="search" class="gn-search">
+                <a class="gn-icon gn-icon-search"><span>Search</span></a>
+              </li>
+              <li>
+                <a href="#tour-tour-one" class="gn-icon gn-icon-cog">How It Works</a>
+              </li>
+              <li>
+                <a href="#available-tours" class="gn-icon gn-icon-download">Tours</a>
+              </li>
+              <li>
+                <a href="#contact" class="gn-icon gn-icon-archive">Contact</a>
+              </li>
+            </ul>
+          </div><!-- /gn-scroller -->
+        </nav>
+      </li>
+      <li>
+        <a href="/">Pictour</a>
+      </li>
+      <li>
+        <ul class="company-social">
+          <li class="social-facebook"><a href="#" target="_blank"><i class="fa fa-facebook"></i></a></li>
+          <li class="social-twitter"><a href="#" target="_blank"><i class="fa fa-twitter"></i></a></li>
+          <!-- <li class="social-dribble"><a href="#" target="_blank"><i class="fa fa-dribbble"></i></a></li> -->
+          <li class="social-google"><a href="#" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+        </ul>
+      </li>
+    </ul>
+    </div>
+
+  <!-- Section: available-tours -->
+  <section id="available-tours" class="home-section text-center bg-gray">
+
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-xs-6 col-sm-3 col-md-3">
+          <div class="team boxed-grey">
+            <div class="inner">
+              <h5>Kitten Crawl</h5>
+              <p class="subtitle">For the culture-loving thirst-quencher.</p>
+              <a class="avatar">
+                <img src="/static/img/kitten-drink.jpg" width="300" height="300" alt="" class="img-responsive" />
+              </a>
+              <p>Not Enrolled</p>
+            </div>
+          </div>
+        </div>
+<!--
+        <ul>
+            <li>{{ user_tour.tour.name }}</li>
+            <li>{{ user_tour.percentage_complete }}</li>
+            <ul>
+            {% for user_step in user_tour.completed_steps.all %}
+                <li>{{ user_step.step.name }} - {{ user_step.image.url }}</li>
+                {% endfor %}
+                {% if user_tour.current_step %}
+                <li>NEXT: {{ user_tour.current_step.name }} CLUE: {{user_tour.current_step.clue }}</li>
+            {% endif %}
+            </ul>
+        <ul> -->
+
+
+
+        {% for user_tour in tours %}
+        <div class="col-xs-6 col-sm-3 col-md-3">
+          <div class="team boxed-grey">
+            <div class="inner">
+              <h5>{{ user_tour.tour.name }}</h5>
+              <p class="subtitle">You said you wanted kittens!</p>
+              <a class="avatar" href="#tour-{{ user_tour.tour.slug }}">
+                <img src="/static/img/kitten.jpg" width="300" height="300" alt="" class="img-responsive" />
+              </a>
+              <p>
+                {{ user_tour.percentage_completion }}% complete!
+              </p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+        <div class="col-xs-6 col-sm-3 col-md-3">
+          <div class="team boxed-grey">
+            <div class="inner">
+              <h5>Cute Kitten Cruise</h5>
+              <p class="subtitle">You said you wanted kittens!</p>
+              <a class="avatar">
+                <img src="/static/img/kitten.jpg" width="300" height="300" alt="" class="img-responsive" />
+              </a>
+              <p>Not Enrolled</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-3 col-md-3">
+          <div class="team boxed-grey">
+            <div class="inner">
+              <h5>Grafitti</h5>
+              <p class="subtitle">Naughty Kittens</p>
+              <a class="avatar">
+                <img src="/static/img/grafitti.jpg" width="300" height="300" alt="" class="img-responsive" />
+              </a>
+              <p>Not Enrolled</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- /Section: available-tours -->
+
+
+  {% for user_tour in tours %}
+  <!-- Section:  -->
+  <section id="tour-{{ user_tour.tour.slug }}" class="home-section text-center bg-gray">
+
+    <div class="heading-about marginbot-50">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2">
+            <div class="section-heading">
+              <h2>{{ user_tour.tour.name }}</h2>
+              <p>{{ user_tour.tour.punchline }}</p>
+              <p><small>Completion: {{ user_tour.percentage_completion }}%</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="row">
+
+        {% for user_step in user_tour.get_completed_steps %}
+        <div class="col-xs-6 col-sm-3 col-md-3">
+          <div class="team boxed-grey complete">
+            <div class="inner">
+              <h5>{{ user_step.step.name }}</h5>
+              <p class="subtitle">{{ user_step.step.clue }}</p>
+              <div class="avatar">
+                <img src="{{ user_step.image.url }}" width="300" height="300" alt="" class="img-responsive" />
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+        {% if user_tour.current_step %}
+        <div class="col-xs-6 col-sm-3 col-md-3">
+          <div class="team boxed-grey">
+            <div class="inner">
+              <h5>CURRENT STEP:{{ user_tour.current_step.name }}</h5>
+              <p class="subtitle">{{ user_tour.current_step.clue }}</p>
+              <div class="avatar">
+                <p>
+                  Take a photo and upload to Dropbox to complete this step!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </section>
+  {% endfor %}
+
+{% endblock content %}
