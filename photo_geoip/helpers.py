@@ -17,7 +17,7 @@ def extract_data(image):
     lng_ref = tags.get("EXIF GPS GPSLongitudeRef", None)
 
     if not lat or not lng or not lat_ref or not lng_ref:
-        raise InvalidGPSData()
+        raise InvalidGPSData('Invalid GPS data: [lat: %s, lng: %s, lat_ref: %s, lng_ref: %s]' % (lat, lng, lat_ref, lng_ref))
 
     # We should use creation date from the image but f that for now.
     time = tags.get("EXIF GPS GPSDate", None)
