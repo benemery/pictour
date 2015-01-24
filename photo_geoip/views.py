@@ -5,6 +5,7 @@ from StringIO import StringIO
 import threading
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.files import File
 from django.http import HttpResponse
 from django.views.generic import View
@@ -46,27 +47,18 @@ def process_user(uid):
     client = DropboxClient(token)
     has_more = True
 
-    user_tour_qs = user_auth.user.tours.filter(active=True)
+    user_tour = UserTour.get_user_tour(user_auth.user)
 
-    if not user_tour_qs.exists():
-        # This user is currently not a member of a tour!?
-        # Meh, let's add em to one.
-        tour = Tour.objects.all().order_by('-id')[0]
-        if UserTour.objects.filter(user=user_auth.user, tour=tour).exists():
-            # User has already completed this tour. Just return.
-            return
-        user_tour, _ = UserTour.objects.get_or_create(user=user_auth.user, tour=tour)
-    else:
-        user_tour = user_tour_qs[0]
+    if not user_tour:
+        # User has already completed this tour. Just return.
+        return
 
     current_step = user_tour.current_step
 
     if current_step == -1:
         # Completed this current tour!
         # Well done you! :D
-        user_tour.active = False
-        user_tour.complete = True
-        user_tour.save()
+        user_tour.mark_completed()
 
     while has_more:
         result = client.delta(cursor)
@@ -109,3 +101,19 @@ def process_user(uid):
 
         # Repeat only if there's more to do
         has_more = result['has_more']
+
+
+from django.shortcuts import render
+
+class YourTours(View):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(YourTours, cls).as_view(**initkwargs)
+        return (view)
+
+    def get(self, request):
+        user = request.user
+
+        tours = user.tours.all().select_related('completed_steps')
+
+        return render(request, 'your_tours.html', {'tours': tours})

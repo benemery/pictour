@@ -46,10 +46,31 @@ class UserTour(models.Model):
         """What is the current step for the user?"""
         if not self.completed_steps.exists():
             return self.tour.first_step
-
-        print self.completed_steps.all().order_by('-step__step_number')
         last_step = self.completed_steps.all().order_by('-step__step_number')[0]
         return last_step.next()
+
+    @staticmethod
+    def get_user_tour(user):
+        """Find this user's current tour / add them to the newest one"""
+        user_tour_qs = user.tours.filter(active=True)
+
+        if not user_tour_qs.exists():
+            # This user is currently not a member of a tour!?
+            # Meh, let's add em to one.
+            tour = Tour.objects.all().order_by('-id')[0]
+            if UserTour.objects.filter(user=user, tour=tour).exists():
+                # User has already completed this tour. Just return.
+                return
+            user_tour, _ = UserTour.objects.get_or_create(user=user, tour=tour)
+        else:
+            user_tour = user_tour_qs[0]
+
+        return user_tour
+
+    def mark_completed(self):
+        self.active = False
+        self.complete = True
+        self.save()
 
 class UserStep(models.Model):
     """Keep track of the photos users take at each step"""
