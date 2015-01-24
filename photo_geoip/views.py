@@ -75,9 +75,8 @@ def process_user(uid):
             try:
                 with client.get_file(path) as f:
                     # ewwww
-                    # Perhaps we can just read the headers? Then if it's within
-                    # range pull the entire file.
-                    s = StringIO(f.read())
+                    # We're guessing the header size here.. We shouldn't.
+                    s = StringIO(f.read(2048))
                     within_range = image_within_limit(
                                         current_step.longitude,
                                         current_step.latitude,
@@ -88,7 +87,14 @@ def process_user(uid):
                         us = UserStep(user_tour=user_tour, step=current_step)
                         us.save()
 
-                        # Now save the image
+                        # Now save the image=
+                        if metadata['thumb_exists']:
+                            # Download the thumb instead
+                            s = StringIO(client.thumbnail(path, size='l').read())
+                        else:
+                            # Pull the original file
+                            s.write(f.read())
+
                         s.seek(0)
                         filename = 'step_%s.jpg' % us.id
                         us.image.save(filename, File(s))
