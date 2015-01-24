@@ -1,14 +1,15 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.http import HttpResponse
+from django.contrib import admin
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.views.generic import View
-from django.contrib import admin
-from django.shortcuts import render_to_response
 import json
 import requests
-
 
 def home(request):
     context = {
@@ -34,9 +35,11 @@ class DBResponseView(View):
         payload = {
             'code':request.GET.get('code', ''),
             'grant_type':'authorization_code',
-            'redirect_uri':REDIRECT_URL + 'dbresponse',
+            'redirect_uri':settings.REDIRECT_URL + 'dbresponse',
         }
-        response = requests.post('https://api.dropbox.com/1/oauth2/token', data=payload, auth=(DROPBOX_APP_KEY, DROPBOX_APP_SECRET))
+        response = requests.post('https://api.dropbox.com/1/oauth2/token',
+                   data=payload,
+                   auth=(settings.DROPBOX_APP_KEY, settings.DROPBOX_APP_SECRET))
         responseJson = json.loads(response.text)
         access_token = responseJson['access_token']
         user_id = responseJson['uid']
@@ -46,15 +49,28 @@ class DBResponseView(View):
         }
         accountInfoReponse = requests.post('https://api.dropbox.com/1/account/info', headers=accountInfoRequestHeaders)
         userJson = json.loads(accountInfoReponse.text)
-        name = user['display_name']
-        email = user['email']
-        return HttpResponse('Yay it worked!!')
+        name = userJson['display_name']
+        email = userJson['email']
+        # return HttpResponse('Yay it worked!!')
 
+        user, _ = User.objects.get_or_create(username=email, first_name=name)
+
+        user.set_password('password')
+        user.save()
+
+        user = authenticate(username=email, password='password')
+
+        # Login user now!
+        login(request, user)
+
+        return HttpResponseRedirect('/your-tours/')
 
 urlpatterns = patterns('',
     url(r'^', include('photo_geoip.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^dbresponse', DBResponseView.as_view(), name='dbresponse'),
 
     url(r'^$', home, name='home'),
 )
