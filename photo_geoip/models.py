@@ -47,7 +47,7 @@ class UserTour(models.Model):
         if not self.completed_steps.exists():
             return self.tour.first_step
         last_step = self.completed_steps.all().order_by('-step__step_number')[0]
-        return last_step.next()
+        return last_step.step.next()
 
     @staticmethod
     def get_user_tour(user):

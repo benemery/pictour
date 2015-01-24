@@ -8,9 +8,8 @@
             {% for user_step in user_tour.completed_steps.all %}
                 <li>{{ user_step.step.name }} - {{ user_step.image.url }}</li>
             {% endfor %}
-            [[{{ user_tour.current_step }}]]
             {% if user_tour.current_step %}
-                <li>NEXT: {{ user_tour.current_step.step.name }}</li>
+                <li>NEXT: {{ user_tour.current_step.name }} CLUE: {{user_tour.current_step.clue }}</li>
             {% endif %}
             </ul>
     {% endfor %}
