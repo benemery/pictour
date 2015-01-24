@@ -147,6 +147,13 @@
 
       <div class="row">
 
+        <div style="width:100%; height:100%;overflow: hidden; position:absolute; top:0; left:0; z-index:-999;">
+            <img id="image_zoomer" style="display: block; zoom: 13.900498179481096; -webkit-transform: scale(13.900498179481096);" src="/static/img/123.jpg" alt="" class="img-responsive">
+        </div>
+
+        <div style="width:100%; height:100%;overflow: hidden; position:absolute; top:0; left:0; z-index:-998; background:white; opacity:0.6;">
+        </div>
+
         {% for user_step in user_tour.get_completed_steps %}
         <div class="col-xs-6 col-sm-3 col-md-3">
           <div class="team boxed-grey complete">
@@ -181,5 +188,51 @@
     </div>
   </section>
   {% endfor %}
+
+  <script type="text/javascript">
+      function getLocation() {
+         if (navigator.geolocation) {
+             navigator.geolocation.watchPosition(showPosition);
+         }
+     }
+   
+      function showPosition(position) {
+         gotLocation(position.coords.latitude, position.coords.longitude); 
+      }
+
+       function zoomTo(zoomLevel) {
+         zoomText = 'display: block; zoom:' + zoomLevel +'; -moz-transform: scale(' + zoomLevel + ');-webkit-transform: scale(' + zoomLevel +');';
+         document.getElementById('image_zoomer').style.cssText = zoomText;
+       } 
+       /*zoomTo(3);*/
+       targetLat = 51.5033;
+       targetLon = 0.1197; 
+     
+       function gotLocation(lat, lon){
+         distance = calculateDistance(lat, lon, targetLat, targetLon);
+         zoomTo(distance);
+       }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {   
+           var R = 6371; // Radius of the earth in km
+            var dLat = deg2rad(lat2-lat1);  // deg2rad below
+            var dLon = deg2rad(lon2-lon1);
+            var a =
+              Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+              Math.sin(dLon/2) * Math.sin(dLon/2)
+              ;
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var d = R * c; // Distance in km
+            return d;
+         }
+
+        function deg2rad(deg) {
+          return deg * (Math.PI/180);
+
+        }  
+
+        getLocation();
+     </script>
 
 {% endblock content %}
