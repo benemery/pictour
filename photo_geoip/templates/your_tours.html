@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul>
+    {% for user_tour in tours %}
+        <li>{{ user_tour.tour.name }}</li>
+            <ul>
+            {% for user_step in user_tour.completed_steps.all %}
+                <li>{{ user_step.step.name }} - {{ user_step.image.url }}</li>
+            {% endfor %}
+            [[{{ user_tour.current_step }}]]
+            {% if user_tour.current_step %}
+                <li>NEXT: {{ user_tour.current_step.step.name }}</li>
+            {% endif %}
+            </ul>
+    {% endfor %}
+    <ul>
+{% endblock content %}
