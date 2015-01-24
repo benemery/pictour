@@ -1,25 +1,36 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.http import HttpResponse
+from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.views.generic import View
 from django.contrib import admin
-from settings_local import DROPBOX_APP_KEY, DROPBOX_APP_SECRET, REDIRECT_URL
+from django.shortcuts import render_to_response
 import json
 import requests
 
-class IndexView(TemplateView):
-    template_name="index.html"
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        context['redirect_url'] = REDIRECT_URL + 'dbresponse'
-        context['app_key'] = DROPBOX_APP_KEY
-        context['logged_in'] = False
-        return context
+def home(request):
+    context = {
+        'redirect_url': settings.REDIRECT_URL + 'dbresponse',
+        'app_key': settings.DROPBOX_APP_KEY,
+    }
+    print context
+    return render_to_response( 'index.html', context, context_instance=RequestContext(request))
+    return render(request, 'index.html', context)
+
+
+# class IndexView(TemplateView):
+#     template_name="index.html"
+
+#     def get_context_data(self, **kwargs):
+#         context = super(IndexView, self).get_context_data(**kwargs)
     
+#         print context
+#         return context
+
 class DBResponseView(View):
-    def get(self, request): 
+    def get(self, request):
         payload = {
             'code':request.GET.get('code', ''),
             'grant_type':'authorization_code',
@@ -45,7 +56,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^$', IndexView.as_view()),
+    url(r'^$', home, name='home'),
 )
 
 if settings.DEBUG:
