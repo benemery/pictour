@@ -79,7 +79,7 @@ class UserTour(models.Model):
     @property
     def percentage_completion(self):
         """How far through the tour is this user?"""
-        all_steps = self.tour.steps.count()
+        all_steps = self.tour.steps.count() or 1
         completed_steps = self.completed_steps.count()
         return int(floor(float(completed_steps) / all_steps * 100))
 
