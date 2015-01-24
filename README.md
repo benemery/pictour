@@ -2,7 +2,7 @@
 
 A self-guided photo tour of London.
 
-Created by [Ben Emery](https://github.com/benemery), [Ollie Bennett](https://github.com/olliebennett), [Shlomie Liberow](https://twitter.com/shlibness) and [Krishan Patel](https://github.com/krishan711) during the [London Dropbox Hackathon](https://www.dropbox.com/developers/blog/117/london-dropbox-hackathon).
+Created by [Ben Emery](https://github.com/benemery), [Ollie Bennett](https://github.com/olliebennett), [Shlomie Liberow](https://github.com/shlib92) and [Krishan Patel](https://github.com/krishan711) during the [London Dropbox Hackathon](https://www.dropbox.com/developers/blog/117/london-dropbox-hackathon).
 
 ## Setup
 
