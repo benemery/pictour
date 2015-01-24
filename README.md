@@ -32,6 +32,13 @@ Set up a tunnel to localhost:8000 (eg. using [Ngrok](https://ngrok.com/)).
 
     ./ngrok 8000
 
+Create a Dropbox app [here](https://www.dropbox.com/developers/apps/create). Options:
+- App type: 'Dropbox API app'
+- Data types: 'Files and datastores'
+- Limit to folder: No (need files already on Dropbox)
+- File access: Specific file type: 'Images'.
+- Name: whatever!
+
 Use [Dropbox Console](https://www.dropbox.com/developers/apps) to configure your app's webhook to
 
     http://your-random-subdomain.ngrok.com/webhook
