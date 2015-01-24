@@ -1,15 +1,17 @@
+from hashlib import sha256
+import hmac
+import json
+from StringIO import StringIO
+import threading
+
 from django.conf import settings
+from django.core.files import File
 from django.http import HttpResponse
 from django.views.generic import View
 
-# from flask import Flask, request, url_for
-from hashlib import sha256
-import hmac
-import threading
-import json
 from dropbox.client import DropboxClient
-
-from photo_geoip.models import UserAuthTokens
+from photo_geoip.models import UserAuthTokens, UserStep, UserTour, Tour
+from photo_geoip.helpers import image_within_limit
 
 class Webhook(View):
     def get(self, request):
@@ -30,7 +32,7 @@ class Webhook(View):
             # good idea to add the work to a reliable queue and process the queue
             # in a worker process.
             threading.Thread(target=process_user, args=(uid,)).start()
-        return ''
+        return HttpResponse('')
 
 def process_user(uid):
     '''Call /delta for the given user ID and process any changes.'''
@@ -44,21 +46,60 @@ def process_user(uid):
     client = DropboxClient(token)
     has_more = True
 
+    user_tour_qs = user_auth.user.tours.filter(active=True)
+
+    if not user_tour_qs.exists():
+        # This user is currently not a member of a tour!?
+        # Meh, let's add em to one.
+        tour = Tour.objects.all().order_by('-id')[0]
+        if UserTour.objects.filter(user=user_auth.user, tour=tour).exists():
+            # User has already completed this tour. Just return.
+            return
+        user_tour, _ = UserTour.objects.get_or_create(user=user_auth.user, tour=tour)
+    else:
+        user_tour = user_tour_qs[0]
+
+    current_step = user_tour.current_step
+
+    if current_step == -1:
+        # Completed this current tour!
+        # Well done you! :D
+        user_tour.active = False
+        user_tour.complete = True
+        user_tour.save()
+
     while has_more:
         result = client.delta(cursor)
 
         for path, metadata in result['entries']:
 
-            # Ignore deleted files, folders, and non-markdown files
+            # Ignore deleted files, folders, and non-image files
             if (metadata is None or
                     metadata['is_dir'] or
                     not path.endswith('.jpg')):
                 continue
 
-            import time
-            with open('%s.jpg' % time.time(), 'wb') as out:
+            try:
                 with client.get_file(path) as f:
-                  out.write(f.read())
+                    # ewwww
+                    # Perhaps we can just read the headers? Then if it's within
+                    # range pull the entire file.
+                    s = StringIO(f.read())
+                    within_range = image_within_limit(
+                                        current_step.longitude,
+                                        current_step.latitude,
+                                        image=s,
+                                        error_margin=current_step.error_boundary)
+
+                    if within_range:
+                        us = UserStep(user_tour=user_tour, step=current_step)
+                        us.save()
+
+                        # Now save the image
+                        s.seek(0)
+                        us.image.save('%s.jpg' % us.id, File(s))
+            except Exception, e:
+                print e
 
         # Update cursor
         cursor = result['cursor']

@@ -4,10 +4,8 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from django_any import any_model
-from photo_geoip.models import Tour, Step
+from photo_geoip.models import Tour, Step, UserStep, UserTour
 from photo_geoip.helpers import extract_data, haversine, image_within_limit
-
-
 
 
 CURRENT_DIR = os.path.dirname(__file__)
@@ -51,6 +49,22 @@ class TestModelSteps(TestCase):
         fourth = third.next()
         self.assertEqual(fourth, -1)
 
+from django.core.files import File
+
+class TestModelUserStep(TestCase):
+    def test_image(self):
+        """Can we save an image?"""
+        tour = any_model(Tour, name='My Test Tour')
+        step = any_model(Step, tour=tour, step_number=1)
+
+        ut = any_model(UserTour, tour=tour)
+
+        path = os.path.join(CURRENT_DIR, "test_image_1.jpg")
+        with open(path, 'rb') as fin:
+            f = File(fin)
+            us = UserStep(user_tour=ut, step=step, image='')
+            us.image.save('1.jpg', f)
+            print us.image
 
 class TestViewWebhook(TestCase):
     def test_get(self):
