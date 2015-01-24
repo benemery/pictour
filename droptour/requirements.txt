@@ -2,6 +2,7 @@ Django==1.7.3
 ExifRead==2.0.0
 dropbox==2.2.0
 pillow
+python-social-auth
 
 # For tests
 django_any
