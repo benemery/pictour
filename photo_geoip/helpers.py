@@ -1,5 +1,8 @@
 import exifread
 
+class InvalidGPSData(Exception):
+    pass
+
 def extract_data(image):
     """Extract long / lat / time from image
 
@@ -7,12 +10,14 @@ def extract_data(image):
     """
     tags = exifread.process_file(image)
 
-
     lat = tags.get("EXIF GPS GPSLatitude", None)
     lng = tags.get("EXIF GPS GPSLongitude", None)
 
     lat_ref = tags.get("EXIF GPS GPSLatitudeRef", None)
     lng_ref = tags.get("EXIF GPS GPSLongitudeRef", None)
+
+    if not lat or not lng or not lat_ref or not lng_ref:
+        raise InvalidGPSData()
 
     # We should use creation date from the image but f that for now.
     time = tags.get("EXIF GPS GPSDate", None)
