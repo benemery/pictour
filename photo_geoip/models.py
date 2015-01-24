@@ -63,7 +63,7 @@ class UserTour(models.Model):
         if not user_tour_qs.exists():
             # This user is currently not a member of a tour!?
             # Meh, let's add em to one.
-            tour = Tour.objects.all().order_by('-id')[0]
+            tour = Tour.objects.all().order_by('id')[0]
             if UserTour.objects.filter(user=user, tour=tour).exists():
                 # User has already completed this tour. Just return.
                 return
