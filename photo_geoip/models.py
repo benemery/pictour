@@ -34,10 +34,10 @@ class Step(models.Model):
         return self.name
 
     def next(self):
-        """Get the next step, return -1 if no more"""
+        """Get the next step, return None if no more"""
         base_qs = self.tour.steps.filter(step_number__gt=self.step_number)
         if not base_qs.exists():
-            return -1
+            return
         return base_qs[:1][0]
 
 class UserTour(models.Model):

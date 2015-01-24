@@ -47,7 +47,7 @@ class TestModelSteps(TestCase):
         self.assertEqual(third.step_number, 3)
 
         fourth = third.next()
-        self.assertEqual(fourth, -1)
+        self.assertEqual(fourth, None)
 
 from django.core.files import File
 
