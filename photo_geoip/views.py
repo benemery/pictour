@@ -56,7 +56,7 @@ def process_user(uid):
 
     current_step = user_tour.current_step
 
-    if current_step:
+    if not current_step:
         # Completed this current tour!
         # Well done you! :D
         user_tour.mark_completed()

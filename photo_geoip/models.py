@@ -82,7 +82,7 @@ class UserTour(models.Model):
 
     def mark_completed(self):
         self.active = False
-        self.complete = True
+        self.completed = True
         self.save()
 
 class UserStep(models.Model):
