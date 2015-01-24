@@ -47,6 +47,11 @@
   <section id="available-tours" class="home-section text-center bg-gray">
 
     <div class="container">
+      <div class="row" style="margin-bottom: 15px;">
+        {% for badge in request.user.badges.all %}
+          {% include "badges/badge.html" %}
+        {% endfor %}
+      </div>
 
       <div class="row">
 

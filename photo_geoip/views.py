@@ -98,6 +98,14 @@ def process_user(uid):
                         s.seek(0)
                         filename = 'step_%s.jpg' % us.id
                         us.image.save(filename, File(s))
+
+                        # Check if complete
+                        current_step = user_tour.current_step
+                        if not current_step:
+                            # Completed this current tour!
+                            # Well done you! :D
+                            user_tour.mark_completed()
+
             except Exception, e:
                 print e
 

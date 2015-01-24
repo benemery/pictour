@@ -100,3 +100,6 @@ class UserAuthTokens(models.Model):
     token = models.CharField(max_length=1024)
     dropbox_uid = models.IntegerField()
     cursor = models.CharField(max_length=2048, blank=True, default='')
+
+# Ensure badges are created
+from photo_geoip.meta_badges import *

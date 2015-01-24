@@ -4,6 +4,7 @@ dropbox==2.2.0
 pillow
 python-social-auth
 MySQL-python
+-e git://github.com/jiaaro/django-badges.git/#egg=django-badges
 
 # For tests
 django_any

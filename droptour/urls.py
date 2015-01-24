@@ -65,6 +65,7 @@ class DBResponseView(View):
 
         return HttpResponseRedirect('/your-tours/')
 
+from badges import views
 urlpatterns = patterns('',
     url(r'^', include('photo_geoip.urls')),
 
@@ -73,6 +74,11 @@ urlpatterns = patterns('',
     url(r'^dbresponse', DBResponseView.as_view(), name='dbresponse'),
 
     url(r'^$', home, name='home'),
+)
+
+urlpatterns += patterns('badges',
+    url(r'^$', views.overview, name="badges_overview"),
+    url(r'^(?P<slug>[A-Za-z0-9_-]+)/$', views.detail, name="badge_detail"),
 )
 
 if settings.DEBUG:
