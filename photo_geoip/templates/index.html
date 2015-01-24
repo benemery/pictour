@@ -47,14 +47,15 @@
         Your data. (sends you) Everywhere.
         <!-- London from a new dimension -->
       </p>
+      {% if not logged_in %}
       <a href="https://www.dropbox.com/1/oauth2/authorize?client_id={{ app_key }}&amp;response_type=code&amp;redirect_uri={{ redirect_url }}&amp;state={{ CSRF }}" class="btn btn-dropbox scroll">
         <i class="fa fa-dropbox"></i> Connect with Dropbox
       </a>
-
+      {% else %}
       <a href="your-tours" class="btn btn-success scroll">
         <i class="fa fa-arrows"></i> View Your Tours!
       </a>
-
+      {% endif %}
     </div>
   </section>
   <!-- /Section: intro -->
