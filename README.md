@@ -6,35 +6,35 @@ Created by [Ben Emery](https://github.com/benemery), [Ollie Bennett](https://git
 
 ## Setup
 
-  cd pictour
+    cd pictour
 
 Install requirements
 
-  pip install -r droptour/requirements.txt
+    pip install -r droptour/requirements.txt
 
 Run tests
 
-  ./manage.py test photo_geoip
+    ./manage.py test photo_geoip
 
 Configure Dropbox vars `DROPBOX_APP_KEY` and `DROPBOX_APP_SECRET` in `settings.py`.
 
 Create database (follow prompts to create a superuser)
 
-  ./manage.py syncdb
+    ./manage.py syncdb
 
 Run server
 
-  ./manage.py runserver
+    ./manage.py runserver
 
 Visit admin panel at [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)!
 
 Set up a tunnel to localhost:8000 (eg. using [Ngrok](https://ngrok.com/)).
 
-  ./ngrok 8000
+    ./ngrok 8000
 
 Use [Dropbox Console](https://www.dropbox.com/developers/apps) to configure your app's webhook to
 
-  http://your-random-subdomain.ngrok.com/webhook
+    http://your-random-subdomain.ngrok.com/webhook
 
 Introspect incoming requests at  [http://localhost:4040](http://localhost:4040).
 
