@@ -1,8 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
+
   <div class="container">
     <ul id="gn-menu" class="gn-menu-main">
+      <li class="gn-trigger">
+        <a class="gn-icon gn-icon-menu"><span>Menu</span></a>
+        <nav class="gn-menu-wrapper">
+          <div class="gn-scroller">
+            <ul class="gn-menu">
+              <li class="gn-search-item">
+                <input placeholder="Search" type="search" class="gn-search">
+                <a class="gn-icon gn-icon-search"><span>Search</span></a>
+              </li>
+              <li>
+                <a href="#tour-tour-one" class="gn-icon gn-icon-cog">How It Works</a>
+              </li>
+              <li>
+                <a href="#available-tours" class="gn-icon gn-icon-download">Tours</a>
+              </li>
+              <li>
+                <a href="#contact" class="gn-icon gn-icon-archive">Contact</a>
+              </li>
+            </ul>
+          </div><!-- /gn-scroller -->
+        </nav>
+      </li>
       <li>
         <a href="/">Pictour</a>
       </li>
@@ -29,9 +52,9 @@
             <div class="inner">
               <h5>Kitten Crawl</h5>
               <p class="subtitle">For the culture-loving thirst-quencher.</p>
-              <div class="avatar">
+              <a class="avatar">
                 <img src="/static/img/kitten-drink.jpg" width="300" height="300" alt="" class="img-responsive" />
-              </div>
+              </a>
               <p>Not Enrolled</p>
             </div>
           </div>
@@ -55,12 +78,12 @@
         {% for user_tour in tours %}
         <div class="col-xs-6 col-sm-3 col-md-3">
           <div class="team boxed-grey">
-            <div class="inner" data-tour-id="tour-{{ user_tour.tour.slug }}">
+            <div class="inner">
               <h5>{{ user_tour.tour.name }}</h5>
               <p class="subtitle">You said you wanted kittens!</p>
-              <div class="avatar">
+              <a class="avatar" href="#tour-{{ user_tour.tour.slug }}">
                 <img src="/static/img/kitten.jpg" width="300" height="300" alt="" class="img-responsive" />
-              </div>
+              </a>
               <p>
                 {{ user_tour.percentage_completion }}% complete!
               </p>
@@ -74,9 +97,10 @@
             <div class="inner">
               <h5>Cute Kitten Cruise</h5>
               <p class="subtitle">You said you wanted kittens!</p>
-              <div class="avatar">
+              <a class="avatar">
                 <img src="/static/img/kitten.jpg" width="300" height="300" alt="" class="img-responsive" />
-              </div>
+              </a>
+              <p>Not Enrolled</p>
             </div>
           </div>
         </div>
@@ -86,9 +110,10 @@
             <div class="inner">
               <h5>Grafitti</h5>
               <p class="subtitle">Naughty Kittens</p>
-              <div class="avatar">
+              <a class="avatar">
                 <img src="/static/img/grafitti.jpg" width="300" height="300" alt="" class="img-responsive" />
-              </div>
+              </a>
+              <p>Not Enrolled</p>
             </div>
           </div>
         </div>
@@ -128,7 +153,6 @@
               <h5>{{ user_step.step.name }}</h5>
               <p class="subtitle">{{ user_step.step.clue }}</p>
               <div class="avatar">
-              blah
                 <img src="{{ user_step.image.url }}" width="300" height="300" alt="" class="img-responsive" />
               </div>
             </div>
@@ -143,7 +167,9 @@
               <h5>CURRENT STEP:{{ user_tour.current_step.name }}</h5>
               <p class="subtitle">{{ user_tour.current_step.clue }}</p>
               <div class="avatar">
-                <img src="{{ user_step.image.url }}" width="300" height="300" alt="" class="img-responsive" />
+                <p>
+                  Take a photo and upload to Dropbox to complete this step!
+                </p>
               </div>
             </div>
           </div>
