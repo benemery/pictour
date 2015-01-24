@@ -47,6 +47,9 @@ class UserTour(models.Model):
     active = models.BooleanField(default=True)
     completed = models.BooleanField(default=False)
 
+    def get_completed_steps(self):
+        return self.completed_steps.all().order_by('id')
+
     @property
     def current_step(self):
         """What is the current step for the user?"""
