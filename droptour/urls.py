@@ -15,6 +15,7 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['redirect_url'] = REDIRECT_URL + 'dbresponse'
         context['app_key'] = DROPBOX_APP_KEY
+        context['logged_in'] = False
         return context
     
 class DBResponseView(View):
