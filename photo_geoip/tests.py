@@ -32,7 +32,7 @@ class TestImageLimit(TestCase):
 class TestModelSteps(TestCase):
     def test_next(self):
         """Does our next function work?"""
-        tour = any_model(Tour, name='My Test Tour')
+        tour = any_model(Tour, image=None, name='My Test Tour')
         any_model(Step, tour=tour, step_number=1)
         any_model(Step, tour=tour, step_number=2)
         any_model(Step, tour=tour, step_number=3)
@@ -54,7 +54,7 @@ from django.core.files import File
 class TestModelUserStep(TestCase):
     def test_image(self):
         """Can we save an image?"""
-        tour = any_model(Tour, name='My Test Tour')
+        tour = any_model(Tour, image=None, name='My Test Tour')
         step = any_model(Step, tour=tour, step_number=1)
 
         ut = any_model(UserTour, tour=tour)
@@ -64,11 +64,10 @@ class TestModelUserStep(TestCase):
             f = File(fin)
             us = UserStep(user_tour=ut, step=step, image='')
             us.image.save('1.jpg', f)
-            print us.image
 
 class TestModelUserTour(TestCase):
     def test_percentage_completion(self):
-        tour = any_model(Tour, name='My Test Tour')
+        tour = any_model(Tour, image=None, name='My Test Tour')
         step1 = any_model(Step, tour=tour, step_number=1)
         step2 = any_model(Step, tour=tour, step_number=2)
         step3 = any_model(Step, tour=tour, step_number=3)
