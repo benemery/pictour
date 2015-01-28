@@ -7,4 +7,6 @@ MySQL-python
 -e git://github.com/jiaaro/django-badges.git/#egg=django-badges
 
 # For tests
-django_any
+django-any==0.2.0
+pytest==2.6.4
+pytest-django==2.8.0
