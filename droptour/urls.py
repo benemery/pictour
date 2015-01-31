@@ -16,9 +16,7 @@ def home(request):
         'redirect_url': settings.REDIRECT_URL + 'dbresponse',
         'app_key': settings.DROPBOX_APP_KEY,
     }
-    print context
     return render_to_response( 'index.html', context, context_instance=RequestContext(request))
-    return render(request, 'index.html', context)
 
 class DBResponseView(View):
     def get(self, request):
