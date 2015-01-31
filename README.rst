@@ -18,6 +18,8 @@ Setup
 
 Install requirements
 
+.. code-block:: console
+
     $ pip install -r droptour/requirements.txt
 
 Run tests
@@ -48,7 +50,7 @@ Set up a tunnel to localhost:8000 (eg. using `Ngrok <https://ngrok.com/>`_).
 
     $ ./ngrok 8000
 
-Create a Dropbox app [here](https://www.dropbox.com/developers/apps/create). Options:
+Create a Dropbox app `here <https://www.dropbox.com/developers/apps/create>`_. Options:
 
 - App type: 'Dropbox API app'
 - Data types: 'Files and datastores'
