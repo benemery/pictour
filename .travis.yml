@@ -3,6 +3,6 @@ install:
   - pip install -r droptour/requirements.txt
   - pip install coveralls
 script:
-  coverage run --source=pyguard -m py.test pyguard
+  coverage run --source=photo_geoip -m py.test photo_geoip
 after_success:
   coveralls
