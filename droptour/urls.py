@@ -20,16 +20,6 @@ def home(request):
     return render_to_response( 'index.html', context, context_instance=RequestContext(request))
     return render(request, 'index.html', context)
 
-
-# class IndexView(TemplateView):
-#     template_name="index.html"
-
-#     def get_context_data(self, **kwargs):
-#         context = super(IndexView, self).get_context_data(**kwargs)
-    
-#         print context
-#         return context
-
 class DBResponseView(View):
     def get(self, request):
         payload = {
