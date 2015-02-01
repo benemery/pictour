@@ -36,18 +36,18 @@ def dropbox_oauth(request):
     response = requests.post('https://api.dropbox.com/1/oauth2/token',
                data=payload,
                auth=(settings.DROPBOX_APP_KEY, settings.DROPBOX_APP_SECRET))
-    responseJson = json.loads(response.text)
-    access_token = responseJson['access_token']
-    user_id = responseJson['uid']
+    data = response.json()
+    access_token = data['access_token']
+    user_id = data['uid']
 
 
-    accountInfoRequestHeaders = {
-        'Authorization': 'Bearer ' + access_token
+    headers = {
+        'Authorization': 'Bearer %s' % access_token
     }
-    accountInfoReponse = requests.post('https://api.dropbox.com/1/account/info', headers=accountInfoRequestHeaders)
-    userJson = json.loads(accountInfoReponse.text)
-    name = userJson['display_name']
-    email = userJson['email']
+    response = requests.post('https://api.dropbox.com/1/account/info', headers=headers)
+    data = response.json()
+    name = data['display_name']
+    email = data['email']
 
     user, _ = User.objects.get_or_create(username=email, first_name=name)
 
