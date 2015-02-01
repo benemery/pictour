@@ -56,3 +56,28 @@ class TestModelUserTour():
         any_model(UserStep, user_tour=user_tour, step=step1, image='')
 
         assert user_tour.percentage_completion == 33
+
+@pytest.mark.django_db
+class TestModelTour():
+    def test_compelted_count(self):
+        """Does our completed count logic work?"""
+        tour1 = any_model(Tour, image=None, name="Tour #1")
+        tour2 = any_model(Tour, image=None, name="Tour #2")
+
+        any_model(UserTour, tour=tour1, completed=True)
+        any_model(UserTour, tour=tour1, completed=True)
+        any_model(UserTour, tour=tour1, completed=True)
+        any_model(UserTour, tour=tour1, completed=False)
+
+        assert tour1.completed_count == 3
+        assert tour2.completed_count == 0
+
+    def test_active_count(self):
+        """Does our active count logic work?"""
+        tour = any_model(Tour, image=None, name="My Tour")
+
+        any_model(UserTour, tour=tour, completed=True, active=True)
+        any_model(UserTour, tour=tour, completed=False, active=True)
+        any_model(UserTour, tour=tour, completed=True, active=False)
+
+        assert tour.active_count == 1

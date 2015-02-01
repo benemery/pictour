@@ -18,6 +18,16 @@ class Tour(models.Model):
     def first_step(self):
         return self.steps.get(step_number=1)
 
+    @property
+    def completed_count(self):
+        """How many times has this tour been completed?"""
+        return UserTour.objects.filter(tour=self, completed=True).count()
+
+    @property
+    def active_count(self):
+        """How many people are currently doing this tour?"""
+        return UserTour.objects.filter(tour=self, completed=False, active=True).count()
+
 class Step(models.Model):
     """Steps for a tour"""
     name = models.CharField(max_length=256)

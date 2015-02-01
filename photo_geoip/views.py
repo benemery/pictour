@@ -15,7 +15,7 @@ from django.template import RequestContext
 from django.views.generic import View
 
 from dropbox.client import DropboxClient
-from photo_geoip.models import UserAuthTokens, UserStep, UserTour
+from photo_geoip.models import UserAuthTokens, UserStep, UserTour, Tour
 from photo_geoip.helpers import image_within_limit
 import requests
 
@@ -175,3 +175,7 @@ class YourTours(View):
         user = request.user
         tours = user.tours.all().select_related('completed_steps')
         return render(request, 'your_tours.html', {'tours': tours})
+
+def tours(request):
+    tours = Tour.objects.all()
+    return render(request, 'available_tours.html', {'tours': tours})

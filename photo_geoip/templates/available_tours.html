@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <!-- Section: available-tours -->
+  <section id="available-tours" class="home-section text-center bg-gray">
+
+    <div class="container">
+      <div class="row">
+        {% for tour in tours %}
+        <div class="col-xs-6 col-sm-3 col-md-3">
+          <div class="team boxed-grey">
+            <div class="inner">
+              <h5>{{ tour.name }}</h5>
+              <p class="subtitle">{{ tour.punchline }}</p>
+              <a class="avatar" href="#tour-{{ tour.slug }}">
+                <img src="{{ tour.image.url }}" width="300" height="300" alt="" class="img-responsive" />
+              </a>
+              <p>
+                Completed by: {{ tour.completed_count }}<br/>
+                Currently active: {{ tour.active_count }}
+              </p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+  </section>
+  <!-- /Section: available-tours -->
+{% endblock content %}
