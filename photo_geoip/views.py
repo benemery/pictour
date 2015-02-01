@@ -9,11 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.files import File
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import View
-
 from dropbox.client import DropboxClient
 from photo_geoip.models import UserAuthTokens, UserStep, UserTour, Tour
 from photo_geoip.helpers import image_within_limit
@@ -21,7 +21,7 @@ import requests
 
 def home(request):
     context = {
-        'redirect_url': settings.REDIRECT_URL + 'dbresponse',
+        'redirect_url': reverse('dbresponse'),
         'app_key': settings.DROPBOX_APP_KEY,
     }
     return render_to_response( 'index.html', context, context_instance=RequestContext(request))
@@ -31,7 +31,7 @@ def dropbox_oauth(request):
     payload = {
         'code': request.GET.get('code', ''),
         'grant_type': 'authorization_code',
-        'redirect_uri': settings.REDIRECT_URL + 'dbresponse',
+        'redirect_uri': reverse('dbresponse'),
     }
     response = requests.post('https://api.dropbox.com/1/oauth2/token',
                data=payload,
