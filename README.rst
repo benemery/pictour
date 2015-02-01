@@ -1,5 +1,5 @@
 .. image:: https://travis-ci.org/benemery/pictour.svg?branch=master
-    :target: https://travis-ci.org/benemery/pictour.svg
+    :target: https://travis-ci.org/benemery/pictour
 
 
 Pic Tour
