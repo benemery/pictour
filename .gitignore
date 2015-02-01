@@ -53,7 +53,7 @@ docs/_build/
 # PyBuilder
 target/
 db.sqlite3
-droptour/settings_local.py
+pictour/settings_local.py
 
 static_collected/
 media/

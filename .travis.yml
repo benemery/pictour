@@ -1,6 +1,6 @@
 language: python
 install:
-  - pip install -r droptour/requirements.txt
+  - pip install -r pictour/requirements.txt
   - pip install coveralls
 script:
   coverage run --source=photo_geoip -m py.test photo_geoip

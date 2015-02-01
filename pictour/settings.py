@@ -1,5 +1,5 @@
 """
-Django settings for droptour project.
+Django settings for pictour project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -63,9 +63,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
-ROOT_URLCONF = 'droptour.urls'
+ROOT_URLCONF = 'pictour.urls'
 
-WSGI_APPLICATION = 'droptour.wsgi.application'
+WSGI_APPLICATION = 'pictour.wsgi.application'
 
 
 # Database

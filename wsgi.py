@@ -7,10 +7,9 @@ warnings.filterwarnings("ignore", ".*Module _mysql was already imported.*")
 warnings.filterwarnings("ignore", ".*Module timezones was already imported.*")
 
 project = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(project, 'droptour'))
-#sys.path.append(os.path.join(project, ''))
+sys.path.append(os.path.join(project, 'pictour'))
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'droptour.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'pictour.settings'
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
