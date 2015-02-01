@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load photo_geoip_tags %}
+
 {% block content %}
   <!-- Section: available-tours -->
   <section id="available-tours" class="home-section text-center bg-gray">
@@ -7,8 +9,9 @@
     <div class="container">
       <div class="row">
         {% for tour in tours %}
+        {% tour_completed request.user tour as complete %}
         <div class="col-xs-6 col-sm-3 col-md-3">
-          <div class="team boxed-grey">
+          <div class="team boxed-grey tour{% if complete %} complete{% endif %}">
             <div class="inner">
               <h5>{{ tour.name }}</h5>
               <p class="subtitle">{{ tour.punchline }}</p>
