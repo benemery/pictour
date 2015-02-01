@@ -67,10 +67,7 @@ def dropbox_oauth(request):
     uat.token = access_token
     uat.save()
 
-    user.set_password('password')
-    user.save()
-
-    user = authenticate(username=email, password='password')
+    user = authenticate(dropbox_uid=user_id, token=access_token)
 
     # Login user now!
     login(request, user)

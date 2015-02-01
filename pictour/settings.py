@@ -104,6 +104,11 @@ MEDIA_URL = '/media/'
 DROPBOX_APP_KEY = 'your-dropbox-app-key'
 DROPBOX_APP_SECRET = 'your-dropbox-app-secret'
 
+AUTHENTICATION_BACKENDS =  (
+        'django.contrib.auth.backends.ModelBackend',
+        'photo_geoip.auth.DropboxAccessTokenBackend',
+    )
+
 try:
     from settings_local import *
 except:
