@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from django_any import any_model
-from photo_geoip.models import Tour, UserTour
+from photo_geoip.models import Tour, UserTour, UserAuthTokens
+import responses
 import pytest
 
 class TestViewWebhook():
@@ -72,3 +73,24 @@ class TestHomeView():
         """Does the home page work?"""
         response = client.get(reverse('home'))
         assert response.status_code == 200
+
+@pytest.mark.django_db
+class TestDropboxOauthView():
+    def _register_dropbox_responses(self):
+        responses.add(responses.POST, 'https://api.dropbox.com/1/oauth2/token',
+              body='{"access_token": "foobar", "uid": 1234}', status=200,
+              content_type='application/json')
+
+        responses.add(responses.POST, 'https://api.dropbox.com/1/account/info',
+              body='{"display_name": "A User", "email": "someone@foo.com"}', status=200,
+              content_type='application/json')
+
+    @responses.activate
+    def test_ok(self, client):
+        """Does the oath pipeline work?"""
+        self._register_dropbox_responses()
+        response = client.get(reverse('dbresponse'))
+
+        # Is the user now authenticated?
+        assert '_auth_user_id' in client.session
+        assert UserAuthTokens.objects.count() == 1

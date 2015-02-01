@@ -26,40 +26,47 @@ def home(request):
     }
     return render_to_response( 'index.html', context, context_instance=RequestContext(request))
 
-class DBResponseView(View):
-    def get(self, request):
-        payload = {
-            'code':request.GET.get('code', ''),
-            'grant_type':'authorization_code',
-            'redirect_uri':settings.REDIRECT_URL + 'dbresponse',
-        }
-        response = requests.post('https://api.dropbox.com/1/oauth2/token',
-                   data=payload,
-                   auth=(settings.DROPBOX_APP_KEY, settings.DROPBOX_APP_SECRET))
-        responseJson = json.loads(response.text)
-        access_token = responseJson['access_token']
-        user_id = responseJson['uid']
+def dropbox_oauth(request):
+    """Pipeline for DropBox's oAuth"""
+    payload = {
+        'code': request.GET.get('code', ''),
+        'grant_type': 'authorization_code',
+        'redirect_uri': settings.REDIRECT_URL + 'dbresponse',
+    }
+    response = requests.post('https://api.dropbox.com/1/oauth2/token',
+               data=payload,
+               auth=(settings.DROPBOX_APP_KEY, settings.DROPBOX_APP_SECRET))
+    responseJson = json.loads(response.text)
+    access_token = responseJson['access_token']
+    user_id = responseJson['uid']
 
-        accountInfoRequestHeaders = {
-            'Authorization': 'Bearer ' + access_token
-        }
-        accountInfoReponse = requests.post('https://api.dropbox.com/1/account/info', headers=accountInfoRequestHeaders)
-        userJson = json.loads(accountInfoReponse.text)
-        name = userJson['display_name']
-        email = userJson['email']
-        # return HttpResponse('Yay it worked!!')
 
-        user, _ = User.objects.get_or_create(username=email, first_name=name)
+    accountInfoRequestHeaders = {
+        'Authorization': 'Bearer ' + access_token
+    }
+    accountInfoReponse = requests.post('https://api.dropbox.com/1/account/info', headers=accountInfoRequestHeaders)
+    userJson = json.loads(accountInfoReponse.text)
+    name = userJson['display_name']
+    email = userJson['email']
 
-        user.set_password('password')
-        user.save()
+    user, _ = User.objects.get_or_create(username=email, first_name=name)
 
-        user = authenticate(username=email, password='password')
+    try:
+        uat = UserAuthTokens.objects.get(dropbox_uid=user_id)
+    except UserAuthTokens.DoesNotExist:
+        uat = UserAuthTokens(dropbox_uid=user_id, user=user)
+    uat.token = access_token
+    uat.save()
 
-        # Login user now!
-        login(request, user)
+    user.set_password('password')
+    user.save()
 
-        return HttpResponseRedirect('/your-tours/')
+    user = authenticate(username=email, password='password')
+
+    # Login user now!
+    login(request, user)
+
+    return HttpResponseRedirect('/your-tours/')
 
 
 class Webhook(View):
