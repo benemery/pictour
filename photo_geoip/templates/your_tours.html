@@ -5,27 +5,7 @@
   <section id="available-tours" class="home-section text-center bg-gray">
 
     <div class="container">
-      <div class="row" style="margin-bottom: 15px;">
-        {% for badge in request.user.badges.all %}
-          {% include "badges/badge.html" %}
-        {% endfor %}
-      </div>
-
       <div class="row">
-
-        <div class="col-xs-6 col-sm-3 col-md-3">
-          <div class="team boxed-grey">
-            <div class="inner">
-              <h5>Kitten Crawl</h5>
-              <p class="subtitle">For the culture-loving thirst-quencher.</p>
-              <a class="avatar">
-                <img src="/static/img/kitten-drink.jpg" width="300" height="300" alt="" class="img-responsive" />
-              </a>
-              <p>Not Enrolled</p>
-            </div>
-          </div>
-        </div>
-
         {% for user_tour in tours %}
         <div class="col-xs-6 col-sm-3 col-md-3">
           <div class="team boxed-grey">
@@ -42,34 +22,6 @@
           </div>
         </div>
         {% endfor %}
-
-        <div class="col-xs-6 col-sm-3 col-md-3">
-          <div class="team boxed-grey">
-            <div class="inner">
-              <h5>Cute Kitten Cruise</h5>
-              <p class="subtitle">You said you wanted kittens!</p>
-              <a class="avatar">
-                <img src="/static/img/kitten.jpg" width="300" height="300" alt="" class="img-responsive" />
-              </a>
-              <p>Not Enrolled</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-xs-6 col-sm-3 col-md-3">
-          <div class="team boxed-grey">
-            <div class="inner">
-              <h5>Grafitti</h5>
-              <p class="subtitle">Naughty Kittens</p>
-              <a class="avatar">
-                <img src="/static/img/grafitti.jpg" width="300" height="300" alt="" class="img-responsive" />
-              </a>
-              <p>Not Enrolled</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
   </section>
   <!-- /Section: available-tours -->
