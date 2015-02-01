@@ -65,3 +65,10 @@ class TestYourToursView():
         """What happens if you're not authenticated?"""
         response = client.post(reverse('your_tours'), {'slug': 'FOOBAR'})
         assert response.status_code == 302
+
+@pytest.mark.django_db
+class TestHomeView():
+    def test_ok(self, client):
+        """Does the home page work?"""
+        response = client.get(reverse('home'))
+        assert response.status_code == 200
