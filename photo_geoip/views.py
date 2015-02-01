@@ -10,7 +10,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import View
 
@@ -176,6 +176,22 @@ class YourTours(View):
         tours = user.tours.all().select_related('completed_steps')
         return render(request, 'your_tours.html', {'tours': tours})
 
+    def post(self, request):
+        """Creating a user tour"""
+        slug = request.POST.get('slug')
+        tour = get_object_or_404(Tour, slug=slug)
+        UserTour.objects.get_or_create(tour=tour, user=request.user)
+
+        if request.is_ajax:
+            data = {
+                'status': 'success',
+            }
+            return HttpResponse(json.dumps(data), content_type='application/json')
+
+        tours = user.tours.all().select_related('completed_steps')
+        return render(request, 'your_tours.html', {'tours': tours})
+
 def tours(request):
+    """Tour list view"""
     tours = Tour.objects.all()
     return render(request, 'available_tours.html', {'tours': tours})
