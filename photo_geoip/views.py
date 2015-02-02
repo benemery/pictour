@@ -195,13 +195,13 @@ class YourTours(View):
         tour = get_object_or_404(Tour, slug=slug)
         UserTour.objects.get_or_create(tour=tour, user=request.user)
 
-        if request.is_ajax:
+        if request.is_ajax():
             data = {
                 'status': 'success',
             }
             return HttpResponse(json.dumps(data), content_type='application/json')
 
-        tours = user.tours.all().select_related('completed_steps')
+        tours = request.user.tours.all().select_related('completed_steps')
         return render(request, 'your_tours.html', {'tours': tours})
 
 def tours(request):
