@@ -1,8 +1,9 @@
 import os
 
-from django_any import any_model
+from django.contrib.auth.models import User
 from django.core.files import File
 
+from django_any import any_model
 from photo_geoip.models import Step, Tour, UserTour, UserStep
 from photo_geoip.tests.helpers import BASE_DIR, create_tour
 import pytest
@@ -67,6 +68,51 @@ class TestModelUserTour():
         user_tour.mark_completed()
         assert not user_tour.active
         assert user_tour.completed
+
+    def test_current_step(self):
+        """Does our current step functionality work?"""
+        tour = create_tour()
+        step1 = any_model(Step, tour=tour, step_number=1)
+        step2 = any_model(Step, tour=tour, step_number=2)
+        step3 = any_model(Step, tour=tour, step_number=3)
+
+        user_tour = any_model(UserTour, tour=tour)
+
+        assert user_tour.current_step.step_number == 1
+        any_model(UserStep, user_tour=user_tour, step=step1, image='')
+        assert user_tour.current_step.step_number == 2
+        any_model(UserStep, user_tour=user_tour, step=step2, image='')
+        assert user_tour.current_step.step_number == 3
+        any_model(UserStep, user_tour=user_tour, step=step3, image='')
+
+    def test_get_tour_not_enrolled(self):
+        """Do we auto-enroll a user?"""
+        tour = create_tour()
+        user = any_model(User)
+
+        assert UserTour.objects.filter(user=user).count() == 0
+        UserTour.get_user_tour(user)
+        # User should have been added to a tour
+        assert UserTour.objects.filter(user=user).count() == 1
+
+    def test_get_tour_enrolled(self):
+        """Do we get the correct tour?"""
+        tour1 = create_tour()
+        tour2 = create_tour()
+        user = any_model(User)
+        any_model(UserTour, user=user, tour=tour1, active=False, completed=False)
+        user_tour = any_model(UserTour, user=user, tour=tour2, active=True, completed=False)
+
+        assert UserTour.get_user_tour(user) == user_tour
+
+    def test_completed_auto_tour(self):
+        """What happens if the user has completed all the tours?!"""
+        tour = create_tour()
+        user = any_model(User)
+        any_model(UserTour, user=user, tour=tour, active=False, completed=True)
+
+        assert UserTour.get_user_tour(user) is None
+
 
 @pytest.mark.django_db
 class TestModelTour():

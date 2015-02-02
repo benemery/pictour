@@ -53,7 +53,7 @@ class Step(models.Model):
 class UserTour(models.Model):
     """Keep track of what tours a user has completed / is currently doing"""
     user = models.ForeignKey(to='auth.User', related_name='tours')
-    tour = models.ForeignKey(to='photo_geoip.Tour')
+    tour = models.ForeignKey(to='photo_geoip.Tour', related_name='user_tours')
     active = models.BooleanField(default=True)
     completed = models.BooleanField(default=False)
 
@@ -76,10 +76,11 @@ class UserTour(models.Model):
         if not user_tour_qs.exists():
             # This user is currently not a member of a tour!?
             # Meh, let's add em to one.
-            tour = Tour.objects.all().order_by('id')[0]
-            if UserTour.objects.filter(user=user, tour=tour).exists():
-                # User has already completed this tour. Just return.
+            tour_qs = Tour.objects.exclude(user_tours__user=user).order_by('id')
+            if not tour_qs.exists():
+                # User has already completed all the tours. Just return.
                 return
+            tour = tour_qs[0]
             user_tour, _ = UserTour.objects.get_or_create(user=user, tour=tour)
         else:
             user_tour = user_tour_qs[0]
