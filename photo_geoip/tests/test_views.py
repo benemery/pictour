@@ -1,28 +1,12 @@
-import os
-
 from django.contrib.auth.models import User
-from django.core.files import File
 from django.core.urlresolvers import reverse
 
 from django_any import any_model
 from photo_geoip.models import Tour, UserTour, UserAuthTokens
+from photo_geoip.tests.helpers import create_tour
 import responses
 import pytest
 
-BASE_DIR = os.path.dirname(__file__)
-
-def create_tour(**options):
-    defaults = {
-        'image': None
-    }
-    defaults.update(options)
-    tour = any_model(Tour, **defaults)
-    if "image" not in options:
-        with open(os.path.join(BASE_DIR, 'test_image_1.jpg'), 'rb') as fin:
-            tour.image.save('my_image.jpg', File(fin))
-            tour.save()
-
-    return tour
 
 class TestViewWebhook():
     def test_get(self, client):

@@ -4,9 +4,8 @@ from django_any import any_model
 from django.core.files import File
 
 from photo_geoip.models import Step, Tour, UserTour, UserStep
+from photo_geoip.tests.helpers import BASE_DIR, create_tour
 import pytest
-
-CURRENT_DIR = os.path.dirname(__file__)
 
 @pytest.mark.django_db
 class TestModelSteps():
@@ -38,7 +37,7 @@ class TestModelUserStep():
 
         ut = any_model(UserTour, tour=tour)
 
-        path = os.path.join(CURRENT_DIR, "test_image_1.jpg")
+        path = os.path.join(BASE_DIR, "test_image_1.jpg")
         with open(path, 'rb') as fin:
             f = File(fin)
             us = UserStep(user_tour=ut, step=step, image='')
@@ -56,6 +55,18 @@ class TestModelUserTour():
         any_model(UserStep, user_tour=user_tour, step=step1, image='')
 
         assert user_tour.percentage_completion == 33
+
+    def test_mark_complete(self):
+        """Does marking a tour as complete behave as expected?"""
+        tour = create_tour()
+        user_tour = any_model(UserTour, tour=tour, active=True, completed=False)
+
+        assert user_tour.active
+        assert not user_tour.completed
+
+        user_tour.mark_completed()
+        assert not user_tour.active
+        assert user_tour.completed
 
 @pytest.mark.django_db
 class TestModelTour():
