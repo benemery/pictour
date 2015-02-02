@@ -1,10 +1,28 @@
+import os
+
 from django.contrib.auth.models import User
+from django.core.files import File
 from django.core.urlresolvers import reverse
 
 from django_any import any_model
 from photo_geoip.models import Tour, UserTour, UserAuthTokens
 import responses
 import pytest
+
+BASE_DIR = os.path.dirname(__file__)
+
+def create_tour(**options):
+    defaults = {
+        'image': None
+    }
+    defaults.update(options)
+    tour = any_model(Tour, **defaults)
+    if "image" not in options:
+        with open(os.path.join(BASE_DIR, 'test_image_1.jpg'), 'rb') as fin:
+            tour.image.save('my_image.jpg', File(fin))
+            tour.save()
+
+    return tour
 
 class TestViewWebhook():
     def test_get(self, client):
@@ -23,12 +41,22 @@ class TestViewWebhook():
 
 @pytest.mark.django_db
 class TestYourToursView():
+    def test_get(self, client):
+        """Can we load the page ok?"""
+        User.objects.create_user('admin', password='root')
+        client.login(username='admin', password='root')
+        tour = any_model(Tour, image=None, slug='slug1')
+        any_model(UserTour, tour=tour)
+
+        response = client.get(reverse('your_tours'))
+        assert response.status_code == 200
+
     def test_post_ok(self, client):
         """Do we create a user tour as expected?"""
         user = User.objects.create_user('admin', password='root')
         client.login(username='admin', password='root')
-        any_model(Tour, image=None, slug='slug1')
-        any_model(Tour, image=None, slug='slug2')
+        create_tour(slug='slug1')
+        create_tour(slug='slug2')
 
         # Do a full post request
         response = client.post(reverse('your_tours'), {'slug': 'slug1'})
@@ -45,7 +73,7 @@ class TestYourToursView():
         """What happens if we attempt multiple enrolments?"""
         user = User.objects.create_user('admin', password='root')
         client.login(username='admin', password='root')
-        any_model(Tour, image=None, slug='slug1')
+        create_tour(slug='slug1')
 
         response = client.post(reverse('your_tours'), {'slug': 'slug1'})
         response = client.post(reverse('your_tours'), {'slug': 'slug1'})
