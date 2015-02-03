@@ -538,3 +538,9 @@ iframe {
 .complete {
   background-color: #ABE0B4;
 }
+
+@media (min-width: 768px) {
+  .slogan h1 {
+    padding-bottom: 120px;
+  }
+}
